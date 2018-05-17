@@ -1,0 +1,72 @@
+**********************************************
+* ROUTERS - Protocolos de enrutamiento       *
+**********************************************
+
+- Rutas estáticas
+	Desde "config"
+	(config)#ip route [red] [mascara] [dirección del proximo salto]
+
+- RIP v1
+	Desde "config"
+	(config)#route rip
+	(config-route)#network [red conectada al router]
+
+	esperar 30 segundos para que converja
+
+- RIP v2 con subnetting (DA 120)
+	Desde "config"
+	(config)#route rip
+	(config-route)#version 2	
+	(config-route)#network [red conectada al router]
+	
+- EIGRP (DA 90)
+	Desde "config"
+	(config)#route eigrp [número del 1 al 999 - usar siempre el mismo numero - ej: 103]
+	(config-route)#network [red conectada al router]
+
+
+- OSPF (DA 110)
+	Desde "config"
+	(config)#route ospf [número del 0 al 65635 - usar siempre el mismo numero - ej: 35768]
+	(config-route)#network [red conectada al router] [máscara inversa] area [número del 1 al 999 - ej: 109]
+
+	Para cambiar la distacia administrativa
+	(config)#route ospf 35768
+	(config-route)#distance 75
+
+Comandos utiles
+show ip protocols - indica protocolos activos (versiones) y distancias administrativas
+show ip route - indica rutas según protocolos
+show running-config - muestra configuración actual
+
+
+**********************************************
+* SWITCHES - Administración de VLAN's        *
+**********************************************
+
+
+- Configuración de VLAN común y corriente
+	#config
+	(config)#vlan [número mayor a 1 (default)] name [nombre de vlan]
+
+	Acceder a la interfaz
+	(config-if)#switchport access vlan [número de vlan]
+
+- Configuración de 2 VLAN sobre el mismo enlace
+	(config)#int GigaEthernet 0/0.2
+	(config-if)#encapsulation dot1q 2
+	(config-if)#ip address 10.0.2.15 255.255.255.0
+	(config-if)#exit
+	(config)#int GigaEthernet 0/0.3
+	(config-if)#encapsulation dot1q 3
+	(config-if)#ip address 10.0.3.15 255.255.255.0
+	(config-if)#exit
+		
+El switch no tiene que tener default gateway
+Importante: Debe haber 1 solo default gateway por VLAN, por mas que fisicamente los switches estén conectados a 
+diferentes routers
+
+
+
+Referencias:
+# DA - Distancia administrativa
